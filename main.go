@@ -6,12 +6,22 @@ func main() {
 	fmt.Println("hello world")
 	ray.InitWindow(800, 450, "raylib [core] example - basic window")
 	defer ray.CloseWindow()
+	ray.InitAudioDevice()
+	defer ray.CloseAudioDevice()
+
+	sound := ray.LoadSound("assets/target.ogg")
 
 	ray.SetTargetFPS(60)
 	camera := ray.Camera2D{ Zoom: 2 }
 	// camera.Target.X = 100
 
 	for !ray.WindowShouldClose() {
+		// update
+		if ray.IsKeyPressed(ray.KeySpace) {
+			ray.PlaySound(sound)
+		}
+
+		// draw
 		ray.BeginDrawing()
 		ray.BeginMode2D(camera)
 
