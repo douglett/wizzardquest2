@@ -8,16 +8,20 @@ func main() {
 	defer ray.CloseWindow()
 
 	ray.SetTargetFPS(60)
-	fps := ""
+	camera := ray.Camera2D{ Zoom: 2 }
+	// camera.Target.X = 100
 
 	for !ray.WindowShouldClose() {
 		ray.BeginDrawing()
+		ray.BeginMode2D(camera)
 
 		ray.ClearBackground(ray.RayWhite)
-		ray.DrawText("Congrats! You created your first window!", 190, 200, 20, ray.LightGray)
-		fps = fmt.Sprintf("%d", ray.GetFPS())
-		ray.DrawText(fps, int32(ray.GetScreenWidth()-30), 2, 20, ray.Green)
+		ray.DrawText("Congrats! You created your first window!", 0, 200, 20, ray.LightGray)
+		fps := fmt.Sprintf("%d", ray.GetFPS())
+		right := int32(float32(ray.GetScreenWidth()) / camera.Zoom)
+		ray.DrawText(fps, right-30, 2, 20, ray.Green)
 
+		ray.EndMode2D()
 		ray.EndDrawing()
 	}
 }
