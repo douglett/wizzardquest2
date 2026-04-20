@@ -10,6 +10,9 @@ func main() {
 	defer ray.CloseAudioDevice()
 
 	sound := ray.LoadSound("assets/target.ogg")
+	defer ray.UnloadSound(sound)
+	tileset := ray.LoadTexture("assets/monotiles.png")
+	defer ray.UnloadTexture(tileset)
 
 	ray.SetTargetFPS(60)
 	camera := ray.Camera2D{ Zoom: 2 }
@@ -24,8 +27,12 @@ func main() {
 		// draw
 		ray.BeginDrawing()
 		ray.BeginMode2D(camera)
-
 		ray.ClearBackground(ray.RayWhite)
+
+		ray.DrawTexture(tileset, 20, 20, ray.White)
+
+		ray.DrawTextureRec(tileset, ray.Rectangle{16, 0, 16, 16}, ray.Vector2{100, 100}, ray.White)
+
 		ray.DrawText("Congrats! You created your first window!", 0, 200, 20, ray.LightGray)
 		fps := fmt.Sprintf("%d", ray.GetFPS())
 		right := int32(float32(ray.GetScreenWidth()) / camera.Zoom)
