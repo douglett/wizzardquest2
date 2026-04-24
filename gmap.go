@@ -39,7 +39,7 @@ func (gm *GMap) load(fname string) error {
 		data := strings.Split(layer.Data, ",")
 		idata := []int{}
 		for _, v := range data {
-			i, _ := strconv.Atoi(v)
+			i, _ := strconv.Atoi(strings.TrimSpace(v))
 			idata = append(idata, i)
 		}
 		layer.IData = idata
@@ -52,9 +52,12 @@ func (gm *GMap) load(fname string) error {
 func (gm GMap) show() {
 	for y := range int32(gm.Height) {
 		for x := range int32(gm.Width) {
-			tile := gm.Layer[0].IData[y * int32(gm.Width) + x] - 1
-			fmt.Println(x, y, tile)
-			screen.blitt(screen.tileset, tile, float32(x*screen.tsize), float32(y*screen.tsize))
+			for _, layer := range gm.Layer {
+				tile := layer.IData[y * int32(gm.Width) + x]
+				if tile > 0 {
+					screen.blitt(screen.tileset, tile-1, float32(x*screen.tsize), float32(y*screen.tsize))
+				}
+			}
 		}
 	}
 }
