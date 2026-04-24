@@ -5,6 +5,18 @@ import "wizzardquest2/gmap"
 
 func main() {
 	fmt.Println("hello world")
+	s := Screen{}
+	s.create()
+	defer s.destroy()
+
+	for !ray.WindowShouldClose() {
+		s.begin()
+		s.flip()
+	}
+}
+
+func test() {
+	fmt.Println("hello world")
 	gmap.Load("assets/world.tmx")
 	return
 
