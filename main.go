@@ -21,9 +21,9 @@ func main() {
 		}
 
 		screen.begin()
-			// ray.DrawTexture(screen.tileset, 20, 20, ray.White)
 			screen.blit(screen.tileset, 20, 20)
-			ray.DrawTextureRec(screen.tileset, ray.Rectangle{16, 0, 16, 16}, ray.Vector2{100, 100}, ray.White)
+			screen.blitt(screen.tileset, 1, 100, 100)
+			screen.blitt(screen.tileset, 14, 100, 120)
 		screen.flip()
 	}
 }

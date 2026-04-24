@@ -55,8 +55,19 @@ func (s Screen) flip() {
 	ray.EndDrawing()
 }
 
-func (s Screen) blit(tex ray.Texture2D, x, y float64) {
-	xx := int32(math.Round(x))
-	yy := int32(math.Round(y))
+func (s Screen) blit(tex ray.Texture2D, x, y float32) {
+	xx := int32(math.Round(float64(x)))
+	yy := int32(math.Round(float64(y)))
 	ray.DrawTexture(screen.tileset, xx, yy, ray.White)
+}
+
+func (s Screen) blitt(tex ray.Texture2D, tile int, x, y float32) {
+	tx := int32(tile) % (tex.Width / screen.tsize)
+	ty := int32(tile) / (tex.Width / screen.tsize)
+	src := ray.Rectangle{
+		float32(tx * screen.tsize), float32(ty * screen.tsize),
+		float32(screen.tsize), float32(screen.tsize),
+	}
+	dst := ray.Vector2{x, y}
+	ray.DrawTextureRec(screen.tileset, src, dst, ray.White)
 }
