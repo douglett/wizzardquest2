@@ -8,6 +8,12 @@ var screen Screen = Screen{
 }
 var gmap GMap = GMap{}
 
+type Mob struct {
+	x, y, tile  int32
+	ox, oy      float32
+}
+var player Mob = Mob{ x: 4, y: 4, tile: 14 }
+
 func main() {
 	fmt.Println("hello world")
 	screen.create()
@@ -28,7 +34,8 @@ func main() {
 
 		screen.begin()
 			gmap.show(-posx, -posy)
-			screen.blitt(screen.tileset, 14, float32((screen.width-screen.tsize)/2), float32((screen.height-screen.tsize)/2))
+			// screen.blitt(screen.tileset, 14, float32((screen.width-screen.tsize)/2), float32((screen.height-screen.tsize)/2))
+			screen.blitt(screen.tileset, player.tile, float32(player.x*screen.tsize)+player.ox, float32(player.y*screen.tsize)+player.oy)
 
 		screen.flip()
 	}

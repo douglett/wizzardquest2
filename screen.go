@@ -61,7 +61,7 @@ func (s Screen) blit(tex ray.Texture2D, x, y float32) {
 	ray.DrawTexture(screen.tileset, xx, yy, ray.White)
 }
 
-func (s Screen) blitt(tex ray.Texture2D, tile int, x, y float32) {
+func (s Screen) blitt(tex ray.Texture2D, tile int32, x, y float32) {
 	tx := int32(tile) % (tex.Width / screen.tsize)
 	ty := int32(tile) / (tex.Width / screen.tsize)
 	src := ray.Rectangle{

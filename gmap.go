@@ -7,8 +7,8 @@ import "strconv"
 
 type GMap struct {
 	XMLName xml.Name     `xml:"map"`
-	Width   int          `xml:"width,attr"`
-	Height  int          `xml:"height,attr"`
+	Width   int32        `xml:"width,attr"`
+	Height  int32        `xml:"height,attr"`
 	Layer   []GMapLayer  `xml:"layer"`
 }
 
@@ -16,7 +16,7 @@ type GMapLayer struct {
 	XMLName xml.Name `xml:"layer"`
 	Name    string   `xml:"name,attr"`
 	Data    string   `xml:"data"`
-	IData   []int
+	IData   []int32
 }
 
 func (gm *GMap) load(fname string) error {
@@ -37,10 +37,10 @@ func (gm *GMap) load(fname string) error {
 	for k := range gm.Layer {
 		layer := &gm.Layer[k]
 		data := strings.Split(layer.Data, ",")
-		idata := []int{}
+		idata := []int32{}
 		for _, v := range data {
 			i, _ := strconv.Atoi(strings.TrimSpace(v))
-			idata = append(idata, i)
+			idata = append(idata, int32(i))
 		}
 		layer.IData = idata
 		layer.Data = ""
@@ -50,10 +50,10 @@ func (gm *GMap) load(fname string) error {
 }
 
 func (gm GMap) show(posx, posy float32) {
-	for y := range int32(gm.Height) {
-		for x := range int32(gm.Width) {
+	for y := range gm.Height {
+		for x := range gm.Width {
 			for _, layer := range gm.Layer {
-				tile := layer.IData[y * int32(gm.Width) + x]
+				tile := layer.IData[y * gm.Width + x]
 				if tile > 0 {
 					screen.blitt(screen.tileset, tile-1, float32(x*screen.tsize) + posx, float32(y*screen.tsize) + posy)
 				}
