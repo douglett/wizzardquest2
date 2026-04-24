@@ -1,4 +1,4 @@
-package gmap
+package main
 import "fmt"
 import "encoding/xml"
 import "os"
@@ -20,9 +20,7 @@ type GMapLayer struct {
 	IData   []int
 }
 
-var MainMap GMap
-
-func Load(fname string) error {
+func (gm *GMap) load(fname string) error {
 	file, err := os.Open(fname)
 	if err != nil {
 		fmt.Println("error", err)
@@ -33,7 +31,6 @@ func Load(fname string) error {
 	fmt.Println("decoding map:", fname)
 
 	// get data from xml
-	gm := GMap{}
 	decoder := xml.NewDecoder(file)
 	decoder.Decode(&gm)
 
@@ -49,12 +46,10 @@ func Load(fname string) error {
 		layer.IData = idata
 		layer.Data = ""
 	}
-
-	fmt.Println(gm)
-	MainMap = gm
+	
 	return nil
 }
 
-func Show() {
+func (g *GMap) show() {
 	// todo
 }
