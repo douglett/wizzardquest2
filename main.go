@@ -3,15 +3,25 @@ import "fmt"
 import ray "github.com/gen2brain/raylib-go/raylib"
 import "wizzardquest2/gmap"
 
+var screen Screen = Screen{
+	width: 160, height: 160, zoom: 4,
+	winname: "WizzardQuest2",
+}
+
 func main() {
 	fmt.Println("hello world")
-	s := Screen{}
-	s.create()
-	defer s.destroy()
+	screen.create()
+	defer screen.destroy()
 
 	for !ray.WindowShouldClose() {
-		s.begin()
-		s.flip()
+		if ray.IsKeyPressed(ray.KeySpace) {
+			ray.PlaySound(screen.sound)
+		}
+
+		screen.begin()
+			ray.DrawTexture(screen.tileset, 20, 20, ray.White)
+			ray.DrawTextureRec(screen.tileset, ray.Rectangle{16, 0, 16, 16}, ray.Vector2{100, 100}, ray.White)
+		screen.flip()
 	}
 }
 
