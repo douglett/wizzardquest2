@@ -7,9 +7,8 @@ import "strconv"
 
 type GMap struct {
 	XMLName xml.Name     `xml:"map"`
-	Width   string       `xml:"width,attr"`
-	Height  string       `xml:"height,attr"`
-	Fart    string       `xml:"fart"`
+	Width   int          `xml:"width,attr"`
+	Height  int          `xml:"height,attr"`
 	Layer   []GMapLayer  `xml:"layer"`
 }
 
@@ -50,6 +49,12 @@ func (gm *GMap) load(fname string) error {
 	return nil
 }
 
-func (g *GMap) show() {
-	// todo
+func (gm GMap) show() {
+	for y := range int32(gm.Height) {
+		for x := range int32(gm.Width) {
+			tile := gm.Layer[0].IData[y * int32(gm.Width) + x] - 1
+			fmt.Println(x, y, tile)
+			screen.blitt(screen.tileset, tile, float32(x*screen.tsize), float32(y*screen.tsize))
+		}
+	}
 }

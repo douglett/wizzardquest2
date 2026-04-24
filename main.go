@@ -24,6 +24,8 @@ func main() {
 			screen.blit(screen.tileset, 20, 20)
 			screen.blitt(screen.tileset, 1, 100, 100)
 			screen.blitt(screen.tileset, 14, 100, 120)
+
+			gmap.show()
 		screen.flip()
 	}
 }
