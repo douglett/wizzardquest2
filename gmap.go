@@ -49,13 +49,13 @@ func (gm *GMap) load(fname string) error {
 	return nil
 }
 
-func (gm GMap) show() {
+func (gm GMap) show(posx, posy float32) {
 	for y := range int32(gm.Height) {
 		for x := range int32(gm.Width) {
 			for _, layer := range gm.Layer {
 				tile := layer.IData[y * int32(gm.Width) + x]
 				if tile > 0 {
-					screen.blitt(screen.tileset, tile-1, float32(x*screen.tsize), float32(y*screen.tsize))
+					screen.blitt(screen.tileset, tile-1, float32(x*screen.tsize) + posx, float32(y*screen.tsize) + posy)
 				}
 			}
 		}
