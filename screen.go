@@ -1,9 +1,10 @@
 package main
 import ray "github.com/gen2brain/raylib-go/raylib"
 import "fmt"
+import "math"
 
 type Screen struct {
-	width, height, zoom int32
+	width, height, zoom, tsize int32
 	winname  string
 	camera   ray.Camera2D
 	tileset  ray.Texture2D
@@ -15,6 +16,7 @@ func (s *Screen) create() error {
 	if s.width <= 0  { s.width = 640 }
 	if s.height <= 0 { s.height = 480 }
 	if s.zoom <= 0   { s.zoom = 1 }
+	if s.tsize <= 0  { s.tsize = 16 }
 	s.camera.Zoom = float32(s.zoom)
 	// init raylib
 	// ray.SetTraceLogLevel(ray.LogInfo)
@@ -51,4 +53,10 @@ func (s Screen) flip() {
 	// flip
 	ray.EndMode2D()
 	ray.EndDrawing()
+}
+
+func (s Screen) blit(tex ray.Texture2D, x, y float64) {
+	xx := int32(math.Round(x))
+	yy := int32(math.Round(y))
+	ray.DrawTexture(screen.tileset, xx, yy, ray.White)
 }
