@@ -1,9 +1,13 @@
 package main
 import "fmt"
 import ray "github.com/gen2brain/raylib-go/raylib"
+import "wizzardquest2/gmap"
 
 func main() {
 	fmt.Println("hello world")
+	gmap.Load("assets/world.tmx")
+	return
+
 	ray.InitWindow(800, 450, "raylib [core] example - basic window")
 	defer ray.CloseWindow()
 	ray.InitAudioDevice()
@@ -36,7 +40,7 @@ func main() {
 		ray.DrawText("Congrats! You created your first window!", 0, 200, 20, ray.LightGray)
 		fps := fmt.Sprintf("%d", ray.GetFPS())
 		right := int32(float32(ray.GetScreenWidth()) / camera.Zoom)
-		ray.DrawText(fps, right-30, 2, 20, ray.Green)
+		ray.DrawText(fps, right-30, 2, 15, ray.Green)
 
 		ray.EndMode2D()
 		ray.EndDrawing()
