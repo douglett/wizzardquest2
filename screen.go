@@ -5,10 +5,11 @@ import "math"
 
 type Screen struct {
 	width, height, zoom, tsize int32
-	winname  string
-	camera   ray.Camera2D
-	tileset  ray.Texture2D
-	sound    ray.Sound
+	winname     string
+	camera      ray.Camera2D
+	tileset     ray.Texture2D
+	sound       ray.Sound
+	offx, offy  float32
 }
 
 func (s *Screen) create() error {
@@ -56,8 +57,8 @@ func (s Screen) flip() {
 }
 
 func (s Screen) blit(tex ray.Texture2D, x, y float32) {
-	xx := int32(math.Round(float64(x)))
-	yy := int32(math.Round(float64(y)))
+	xx := int32(math.Round(float64(x)) + math.Round(float64(screen.offx)))
+	yy := int32(math.Round(float64(y)) + math.Round(float64(screen.offy)))
 	ray.DrawTexture(screen.tileset, xx, yy, ray.White)
 }
 
@@ -68,6 +69,6 @@ func (s Screen) blitt(tex ray.Texture2D, tile int32, x, y float32) {
 		float32(tx * screen.tsize), float32(ty * screen.tsize),
 		float32(screen.tsize), float32(screen.tsize),
 	}
-	dst := ray.Vector2{x, y}
+	dst := ray.Vector2{x+screen.offx, y+screen.offy}
 	ray.DrawTextureRec(screen.tileset, src, dst, ray.White)
 }

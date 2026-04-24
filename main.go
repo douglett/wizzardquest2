@@ -33,10 +33,10 @@ func main() {
 		if ray.IsKeyDown(ray.KeyRight) { posx++ }
 
 		screen.begin()
-			gmap.show(-posx, -posy)
-			// screen.blitt(screen.tileset, 14, float32((screen.width-screen.tsize)/2), float32((screen.height-screen.tsize)/2))
+			screen.offx = -posx
+			screen.offy = -posy
+			gmap.show(0, 0)
 			screen.blitt(screen.tileset, player.tile, float32(player.x*screen.tsize)+player.ox, float32(player.y*screen.tsize)+player.oy)
-
 		screen.flip()
 	}
 }
