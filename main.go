@@ -12,6 +12,10 @@ type Mob struct {
 	x, y, tile  int
 }
 
+func (mob Mob) pos() (int, int) {
+	return mob.x / screen.tsize, mob.y / screen.tsize
+}
+
 func (mob Mob) paint() {
 	screen.blitt(screen.tileset, mob.tile, mob.x, mob.y)
 }
@@ -57,8 +61,10 @@ func repaint() {
 }
 
 func walk(dx, dy int) {
+	tx, ty := player.pos()
+	if gmap.tile(tx + dx, ty + dy) > 12 { return }
 	dist := 0
-	for !ray.WindowShouldClose() && dist < screen.tsize {
+	for dist < screen.tsize {
 		player.x += dx
 		player.y += dy
 		dist++

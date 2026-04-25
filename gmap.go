@@ -65,3 +65,9 @@ func (gm GMap) paintat(posx, posy int) {
 		}
 	}
 }
+
+func (gm GMap) tile(x, y int) int {
+	// if gm.Width == 0 || gm.Height == 0 || len(gm.Layer) == 0 { return 0 }
+	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height { return 1000 }
+	return gm.Layer[0].IData[y * gm.Width + x]
+}
