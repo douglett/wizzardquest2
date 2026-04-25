@@ -12,6 +12,10 @@ type Mob struct {
 	x, y, tile  int
 }
 
+func (mob Mob) paint() {
+	screen.blitt(screen.tileset, mob.tile, mob.x, mob.y)
+}
+
 // set screen center to player 
 func (mob Mob) centeron() {
 	screen.offsetx = -(mob.x - (screen.width - screen.tsize) / 2)
@@ -26,50 +30,38 @@ func main() {
 	defer screen.destroy()
 	gmap.load("assets/world.tmx")
 
-	var posx, posy int = player.x, player.y
-	// move := -1
-
 	for !ray.WindowShouldClose() {
 		if ray.IsKeyPressed(ray.KeySpace) {
 			ray.PlaySound(screen.sound)
 		}
 
-		if ray.IsKeyDown(ray.KeyUp)    { posy-- }
-		if ray.IsKeyDown(ray.KeyDown)  { posy++ }
-		if ray.IsKeyDown(ray.KeyLeft)  { posx-- }
-		if ray.IsKeyDown(ray.KeyRight) { posx++ }
+		// player walk
+		switch {
+			case ray.IsKeyDown(ray.KeyUp):     walk( 0, -1)
+			case ray.IsKeyDown(ray.KeyRight):  walk( 1,  0)
+			case ray.IsKeyDown(ray.KeyDown):   walk( 0,  1)
+			case ray.IsKeyDown(ray.KeyLeft):   walk(-1,  0)
+		}
 
-		// switch move {
-		// case 0:
-		// 	player.oy--
-		// 	if player.oy <= -16 { player.oy = 0; player.y--; move = -1 }
-		// case 1:
-		// 	player.ox++
-		// 	if player.ox >= 16 { player.ox = 0; player.x++; move = -1 }
-		// case 2:
-		// 	player.oy++
-		// 	if player.oy >= 16 { player.oy = 0; player.y++; move = -1 }
-		// case 3:
-		// 	player.ox--
-		// 	if player.ox <= -16 { player.ox = 0; player.x--; move = -1 }
-		// case -1:
-		// 	if ray.IsKeyDown(ray.KeyUp)    { move = 0 }
-		// 	if ray.IsKeyDown(ray.KeyRight) { move = 1 }
-		// 	if ray.IsKeyDown(ray.KeyDown)  { move = 2 }
-		// 	if ray.IsKeyDown(ray.KeyLeft)  { move = 3 }
-		// }
+		// repaint screen
+		repaint()
+	}
+}
 
-		screen.begin()
-			// screen.offsetx = -posx
-			// screen.offsety = -posy
+func repaint() {
+	screen.begin()
+		gmap.paint()
+		player.centeron()
+		screen.blitt(screen.tileset, player.tile, player.x, player.y)
+	screen.flip()
+}
 
-			// set player position
-			player.x = posx
-			player.y = posy
-			player.centeron()
-
-			gmap.show(0, 0)
-			screen.blitt(screen.tileset, player.tile, player.x, player.y)
-		screen.flip()
+func walk(dx, dy int) {
+	dist := 0
+	for !ray.WindowShouldClose() && dist < screen.tsize {
+		player.x += dx
+		player.y += dy
+		dist++
+		if (dist < screen.tsize) { repaint() }
 	}
 }

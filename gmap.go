@@ -49,7 +49,11 @@ func (gm *GMap) load(fname string) error {
 	return nil
 }
 
-func (gm GMap) show(posx, posy int) {
+func (gm GMap) paint() {
+	gm.paintat(0, 0)
+}
+
+func (gm GMap) paintat(posx, posy int) {
 	for y := range gm.Height {
 		for x := range gm.Width {
 			for _, layer := range gm.Layer {
