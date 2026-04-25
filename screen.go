@@ -4,12 +4,12 @@ import "fmt"
 import "math"
 
 type Screen struct {
-	width, height, zoom, tsize int32
+	width, height, zoom, tsize int
 	winname     string
 	camera      ray.Camera2D
 	tileset     ray.Texture2D
 	sound       ray.Sound
-	offx, offy  float32
+	offsetx, offsety  int
 }
 
 func (s *Screen) create() error {
@@ -22,7 +22,7 @@ func (s *Screen) create() error {
 	// init raylib
 	// ray.SetTraceLogLevel(ray.LogInfo)
 	ray.SetTraceLogLevel(ray.LogWarning)
-	ray.InitWindow(s.width * s.zoom, s.height * s.zoom, s.winname)
+	ray.InitWindow(int32(s.width * s.zoom), int32(s.height * s.zoom), s.winname)
 	ray.InitAudioDevice()
 	ray.SetTargetFPS(60)
 	// load assets
@@ -50,25 +50,33 @@ func (s Screen) flip() {
 	fps := fmt.Sprintf("%d", ray.GetFPS())
 	fontw := int32(10)
 	txtw := ray.MeasureText(fps, fontw)
-	ray.DrawText(fps, s.width - (txtw + 2), 1, fontw, ray.Green)
+	ray.DrawText(fps, int32(s.width) - (txtw + 2), 1, fontw, ray.Green)
 	// flip
 	ray.EndMode2D()
 	ray.EndDrawing()
 }
 
-func (s Screen) blit(tex ray.Texture2D, x, y float32) {
-	xx := int32(math.Round(float64(x)) + math.Round(float64(screen.offx)))
-	yy := int32(math.Round(float64(y)) + math.Round(float64(screen.offy)))
-	ray.DrawTexture(screen.tileset, xx, yy, ray.White)
+// blit sub-pixel positions
+func (s Screen) blitf(tex ray.Texture2D, x, y float64) {
+	s.blit(tex, int(math.Round(x)), int(math.Round(y)))
+}
+func (s Screen) blittf(tex ray.Texture2D, tile int, x, y float64) {
+	s.blitt(tex, tile, int(math.Round(x)), int(math.Round(y)))
 }
 
-func (s Screen) blitt(tex ray.Texture2D, tile int32, x, y float32) {
-	tx := int32(tile) % (tex.Width / screen.tsize)
-	ty := int32(tile) / (tex.Width / screen.tsize)
+// texture blitting
+func (s Screen) blit(tex ray.Texture2D, x, y int) {
+	ray.DrawTexture(screen.tileset, int32(x + screen.offsetx), int32(y + screen.offsety), ray.White)
+}
+
+// blit texture as tileset
+func (s Screen) blitt(tex ray.Texture2D, tile, x, y int) {
+	tx := tile % (int(tex.Width) / screen.tsize)
+	ty := tile / (int(tex.Width) / screen.tsize)
 	src := ray.Rectangle{
 		float32(tx * screen.tsize), float32(ty * screen.tsize),
 		float32(screen.tsize), float32(screen.tsize),
 	}
-	dst := ray.Vector2{x+screen.offx, y+screen.offy}
+	dst := ray.Vector2{ float32(x + screen.offsetx), float32(y + screen.offsety) }
 	ray.DrawTextureRec(screen.tileset, src, dst, ray.White)
 }
