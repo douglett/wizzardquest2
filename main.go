@@ -11,6 +11,13 @@ var gmap GMap = GMap{}
 type Mob struct {
 	x, y, tile  int
 }
+
+// set screen center to player 
+func (mob Mob) centeron() {
+	screen.offsetx = -(mob.x - (screen.width - screen.tsize) / 2)
+	screen.offsety = -(mob.y - (screen.height - screen.tsize) / 2)
+}
+
 var player Mob = Mob{ x: 4*screen.tsize, y: 4*screen.tsize, tile: 14 }
 
 func main() {
@@ -59,9 +66,7 @@ func main() {
 			// set player position
 			player.x = posx
 			player.y = posy
-			// set screen center to player 
-			screen.offsetx = -(player.x - (screen.width - screen.tsize) / 2)
-			screen.offsety = -(player.y - (screen.height - screen.tsize) / 2)
+			player.centeron()
 
 			gmap.show(0, 0)
 			screen.blitt(screen.tileset, player.tile, player.x, player.y)

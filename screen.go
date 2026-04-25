@@ -12,71 +12,71 @@ type Screen struct {
 	offsetx, offsety  int
 }
 
-func (s *Screen) create() error {
+func (scr *Screen) create() error {
 	// defaults
-	if s.width <= 0  { s.width = 640 }
-	if s.height <= 0 { s.height = 480 }
-	if s.zoom <= 0   { s.zoom = 1 }
-	if s.tsize <= 0  { s.tsize = 16 }
-	s.camera.Zoom = float32(s.zoom)
+	if scr.width <= 0  { scr.width = 640 }
+	if scr.height <= 0 { scr.height = 480 }
+	if scr.zoom <= 0   { scr.zoom = 1 }
+	if scr.tsize <= 0  { scr.tsize = 16 }
+	scr.camera.Zoom = float32(scr.zoom)
 	// init raylib
 	// ray.SetTraceLogLevel(ray.LogInfo)
 	ray.SetTraceLogLevel(ray.LogWarning)
-	ray.InitWindow(int32(s.width * s.zoom), int32(s.height * s.zoom), s.winname)
+	ray.InitWindow(int32(scr.width * scr.zoom), int32(scr.height * scr.zoom), scr.winname)
 	ray.InitAudioDevice()
 	ray.SetTargetFPS(60)
 	// load assets
-	s.tileset = ray.LoadTexture("assets/monotiles.png")
-	s.sound = ray.LoadSound("assets/target.ogg")
+	scr.tileset = ray.LoadTexture("assets/monotiles.png")
+	scr.sound = ray.LoadSound("assets/target.ogg")
 	// ok
-	fmt.Println("Screen initialized:", s.width, s.height)
+	fmt.Println("Screen initialized:", scr.width, scr.height)
 	return nil
 }
 
-func (s Screen) destroy() {
+func (scr Screen) destroy() {
 	ray.CloseAudioDevice()
 	ray.CloseWindow()
 	fmt.Println("Screen destroyed")
 }
 
-func (s Screen) begin() {
+func (scr Screen) begin() {
 	ray.BeginDrawing()
-	ray.BeginMode2D(s.camera)
+	ray.BeginMode2D(scr.camera)
 	ray.ClearBackground(ray.RayWhite)
 }
 
-func (s Screen) flip() {
+func (scr Screen) flip() {
 	// show framerate
 	fps := fmt.Sprintf("%d", ray.GetFPS())
 	fontw := int32(10)
 	txtw := ray.MeasureText(fps, fontw)
-	ray.DrawText(fps, int32(s.width) - (txtw + 2), 1, fontw, ray.Green)
+	ray.DrawText(fps, int32(scr.width) - (txtw + 2), 1, fontw, ray.Green)
 	// flip
 	ray.EndMode2D()
 	ray.EndDrawing()
 }
 
 // blit sub-pixel positions
-func (s Screen) blitf(tex ray.Texture2D, x, y float64) {
-	s.blit(tex, int(math.Round(x)), int(math.Round(y)))
+func (scr Screen) blitf(tex ray.Texture2D, x, y float64) {
+	scr.blit(tex, int(math.Round(x)), int(math.Round(y)))
 }
-func (s Screen) blittf(tex ray.Texture2D, tile int, x, y float64) {
-	s.blitt(tex, tile, int(math.Round(x)), int(math.Round(y)))
+func (scr Screen) blittf(tex ray.Texture2D, tile int, x, y float64) {
+	scr.blitt(tex, tile, int(math.Round(x)), int(math.Round(y)))
 }
 
 // texture blitting
-func (s Screen) blit(tex ray.Texture2D, x, y int) {
-	ray.DrawTexture(screen.tileset, int32(x + screen.offsetx), int32(y + screen.offsety), ray.White)
+func (scr Screen) blit(tex ray.Texture2D, x, y int) {
+	ray.DrawTexture(scr.tileset, int32(x + scr.offsetx), int32(y + scr.offsety), ray.White)
 }
 
 // blit texture as tileset
-func (s Screen) blitt(tex ray.Texture2D, tile, x, y int) {
-	tx := tile % (int(tex.Width) / screen.tsize)
-	ty := tile / (int(tex.Width) / screen.tsize)
+func (scr Screen) blitt(tex ray.Texture2D, tile, x, y int) {
+	tx := tile % (int(tex.Width) / scr.tsize)
+	ty := tile / (int(tex.Width) / scr.tsize)
 	src := ray.Rectangle{
-		float32(tx * screen.tsize), float32(ty * screen.tsize),
-		float32(screen.tsize), float32(screen.tsize),
+		float32(tx * scr.tsize), float32(ty * scr.tsize),
+		float32(scr.tsize), float32(scr.tsize),
 	}
-	dst := ray.Vector2{ float32(x + screen.offsetx), float32(y + screen.offsety) }
-	ray.DrawTextureRec(screen.tileset, src, dst, ray.White)
+	dst := ray.Vector2{ float32(x + scr.offsetx), float32(y + scr.offsety) }
+	ray.DrawTextureRec(scr.tileset, src, dst, ray.White)
 }
