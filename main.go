@@ -12,16 +12,16 @@ type Mob struct {
 	x, y, tile  int
 }
 
-func (mob Mob) pos() (int, int) {
+func (mob *Mob) pos() (int, int) {
 	return mob.x / screen.tsize, mob.y / screen.tsize
 }
 
-func (mob Mob) paint() {
+func (mob *Mob) paint() {
 	screen.blitt(screen.tileset, mob.tile, mob.x, mob.y)
 }
 
 // set screen center to player 
-func (mob Mob) centeron() {
+func (mob *Mob) centeron() {
 	screen.offsetx = -(mob.x - (screen.width - screen.tsize) / 2)
 	screen.offsety = -(mob.y - (screen.height - screen.tsize) / 2)
 }
@@ -33,6 +33,7 @@ func main() {
 	screen.create()
 	defer screen.destroy()
 	gmap.load("assets/world.tmx")
+	gmap.showCollision = true
 
 	for !ray.WindowShouldClose() {
 		if ray.IsKeyPressed(ray.KeySpace) {
@@ -62,7 +63,7 @@ func repaint() {
 
 func walk(dx, dy int) {
 	tx, ty := player.pos()
-	if gmap.tile(tx + dx, ty + dy) > 12 { return }
+	if _, c := gmap.tile(tx + dx, ty + dy); c == true { return }
 	dist := 0
 	for dist < screen.tsize {
 		player.x += dx

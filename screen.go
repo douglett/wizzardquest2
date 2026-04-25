@@ -33,19 +33,19 @@ func (scr *Screen) create() error {
 	return nil
 }
 
-func (scr Screen) destroy() {
+func (scr *Screen) destroy() {
 	ray.CloseAudioDevice()
 	ray.CloseWindow()
 	fmt.Println("Screen destroyed")
 }
 
-func (scr Screen) begin() {
+func (scr *Screen) begin() {
 	ray.BeginDrawing()
 	ray.BeginMode2D(scr.camera)
 	ray.ClearBackground(ray.RayWhite)
 }
 
-func (scr Screen) flip() {
+func (scr *Screen) flip() {
 	// show framerate
 	fps := fmt.Sprintf("%d", ray.GetFPS())
 	fontw := int32(10)
@@ -57,20 +57,20 @@ func (scr Screen) flip() {
 }
 
 // blit sub-pixel positions
-func (scr Screen) blitf(tex ray.Texture2D, x, y float64) {
+func (scr *Screen) blitf(tex ray.Texture2D, x, y float64) {
 	scr.blit(tex, int(math.Round(x)), int(math.Round(y)))
 }
-func (scr Screen) blittf(tex ray.Texture2D, tile int, x, y float64) {
+func (scr *Screen) blittf(tex ray.Texture2D, tile int, x, y float64) {
 	scr.blitt(tex, tile, int(math.Round(x)), int(math.Round(y)))
 }
 
 // texture blitting
-func (scr Screen) blit(tex ray.Texture2D, x, y int) {
+func (scr *Screen) blit(tex ray.Texture2D, x, y int) {
 	ray.DrawTexture(scr.tileset, int32(x + scr.offsetx), int32(y + scr.offsety), ray.White)
 }
 
 // blit texture as tileset
-func (scr Screen) blitt(tex ray.Texture2D, tile, x, y int) {
+func (scr *Screen) blitt(tex ray.Texture2D, tile, x, y int) {
 	tx := tile % (int(tex.Width) / scr.tsize)
 	ty := tile / (int(tex.Width) / scr.tsize)
 	src := ray.Rectangle{
@@ -79,4 +79,8 @@ func (scr Screen) blitt(tex ray.Texture2D, tile, x, y int) {
 	}
 	dst := ray.Vector2{ float32(x + scr.offsetx), float32(y + scr.offsety) }
 	ray.DrawTextureRec(scr.tileset, src, dst, ray.White)
+}
+
+func (scr *Screen) rect(x, y, w, h int) {
+	ray.DrawRectangle(int32(x + scr.offsetx), int32(y + scr.offsety), int32(w), int32(h), ray.Color{255, 0, 0, 100})
 }

@@ -10,6 +10,7 @@ type GMap struct {
 	Width   int          `xml:"width,attr"`
 	Height  int          `xml:"height,attr"`
 	Layer   []GMapLayer  `xml:"layer"`
+	showCollision  bool
 }
 
 type GMapLayer struct {
@@ -49,25 +50,39 @@ func (gm *GMap) load(fname string) error {
 	return nil
 }
 
-func (gm GMap) paint() {
+func (gm *GMap) paint() {
 	gm.paintat(0, 0)
 }
 
-func (gm GMap) paintat(posx, posy int) {
+func (gm *GMap) paintat(posx, posy int) {
+	layer := &gm.Layer[0]
+	coll := &gm.Layer[1]
 	for y := range gm.Height {
 		for x := range gm.Width {
-			for _, layer := range gm.Layer {
-				tile := layer.IData[y * gm.Width + x]
-				if tile > 0 {
-					screen.blitt(screen.tileset, tile - 1, (x * screen.tsize) + posx, (y * screen.tsize) + posy)
-				}
+			// for _, layer := range gm.Layer {
+			// 	if layer.Name == "collision" { continue }
+			// 	tile := layer.IData[y * gm.Width + x]
+			// 	if tile > 0 {
+			// 		screen.blitt(screen.tileset, tile - 1, (x * screen.tsize) + posx, (y * screen.tsize) + posy)
+			// 	}
+			// }
+
+			// show game tile
+			tile := layer.IData[y * gm.Width + x]
+			if tile > 0 {
+				screen.blitt(screen.tileset, tile - 1, (x * screen.tsize) + posx, (y * screen.tsize) + posy)
+			}
+			// show collision layer (optional)
+			c := coll.IData[y * gm.Width + x]
+			if gm.showCollision && c > 0 {
+				screen.rect((x * screen.tsize) + posx, (y * screen.tsize) + posy, screen.tsize, screen.tsize)
 			}
 		}
 	}
 }
 
-func (gm GMap) tile(x, y int) int {
+func (gm *GMap) tile(x, y int) (int, bool) {
 	// if gm.Width == 0 || gm.Height == 0 || len(gm.Layer) == 0 { return 0 }
-	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height { return 1000 }
-	return gm.Layer[0].IData[y * gm.Width + x]
+	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height { return 1000, true }
+	return gm.Layer[0].IData[y * gm.Width + x], gm.Layer[1].IData[y * gm.Width + x] > 0
 }
