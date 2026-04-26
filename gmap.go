@@ -86,3 +86,27 @@ func (gm *GMap) tile(x, y int) (int, bool) {
 	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height { return 1000, true }
 	return gm.Layer[0].IData[y * gm.Width + x], gm.Layer[1].IData[y * gm.Width + x] > 0
 }
+
+
+
+// === Map Fragments ===
+
+type MapFrag struct {
+	w, h  int
+	idata  []int
+}
+
+func (mf *MapFrag) width()  int { return mf.w * screen.tsize }
+func (mf *MapFrag) height() int { return mf.h * screen.tsize }
+
+func (mf *MapFrag) border(pad int) {
+	screen.rect(-pad, -pad, mf.width()+pad*2, mf.height()+pad*2, ColorBlack)
+}
+
+func (mf *MapFrag) show() {
+	for y := range mf.h {
+		for x := range mf.w {
+			screen.blitt(screen.tileset, mf.idata[y * mf.w + x]-1, x*screen.tsize, y*screen.tsize)
+		}
+	}
+}

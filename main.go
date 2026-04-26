@@ -12,6 +12,7 @@ var player Mob = Mob{ x: 4*screen.tsize, y: 4*screen.tsize, tile: 14 }
 
 // useful colors
 var ColorCollision ray.Color = ray.Color{255, 0, 0, 100}
+var ColorBlack ray.Color = ray.Color{16, 8, 32, 255}
 
 // start game
 func main() {
@@ -61,12 +62,36 @@ func walk(dx, dy int) {
 }
 
 func battle() {
+	dialog := MapFrag{
+		w: 7,
+		h: 2,
+		idata: []int{
+			4,  8,  8,  8,  8,  8,  5,
+			7,  10, 10, 10, 10, 10, 6,
+		},
+	}
+	box := MapFrag{
+		w: 5,
+		h: 5,
+		idata: []int{
+			4,  8,  8,  8,  5,
+			11, 1,  1,  1,  9,
+			11, 1,  1,  1,  9,
+			11, 1,  1,  1,  9,
+			7,  10, 10, 10, 6,
+		},
+	}
 	for !ray.WindowShouldClose() {
 		screen.begin()
 			player.centeron()
 			gmap.paint()
-			screen.offsetx, screen.offsety = 0, 0
-			screen.rect(10, 10, 100, 100, ray.Black)
+
+			screen.offsetx, screen.offsety = (screen.width-box.width())/2, 20
+			box.border(10)
+			box.show()
+			screen.offsetx, screen.offsety = (screen.width-dialog.width())/2, 120
+			dialog.border(2)
+			dialog.show()
 		screen.flip()
 	}
 }
