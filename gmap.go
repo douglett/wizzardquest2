@@ -59,14 +59,6 @@ func (gm *GMap) paintat(posx, posy int) {
 	coll := &gm.Layer[1]
 	for y := range gm.Height {
 		for x := range gm.Width {
-			// for _, layer := range gm.Layer {
-			// 	if layer.Name == "collision" { continue }
-			// 	tile := layer.IData[y * gm.Width + x]
-			// 	if tile > 0 {
-			// 		screen.blitt(screen.tileset, tile - 1, (x * screen.tsize) + posx, (y * screen.tsize) + posy)
-			// 	}
-			// }
-
 			// show game tile
 			tile := layer.IData[y * gm.Width + x]
 			if tile > 0 {
@@ -82,7 +74,6 @@ func (gm *GMap) paintat(posx, posy int) {
 }
 
 func (gm *GMap) tile(x, y int) (int, bool) {
-	// if gm.Width == 0 || gm.Height == 0 || len(gm.Layer) == 0 { return 0 }
 	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height { return 1000, true }
 	return gm.Layer[0].IData[y * gm.Width + x], gm.Layer[1].IData[y * gm.Width + x] > 0
 }

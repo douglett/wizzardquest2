@@ -66,7 +66,7 @@ func (scr *Screen) blittf(tex ray.Texture2D, tile int, x, y float64) {
 
 // texture blitting
 func (scr *Screen) blit(tex ray.Texture2D, x, y int) {
-	ray.DrawTexture(scr.tileset, int32(x + scr.offsetx), int32(y + scr.offsety), ray.White)
+	ray.DrawTexture(tex, int32(x + scr.offsetx), int32(y + scr.offsety), ray.White)
 }
 
 // blit texture as tileset
@@ -78,7 +78,7 @@ func (scr *Screen) blitt(tex ray.Texture2D, tile, x, y int) {
 		float32(scr.tsize), float32(scr.tsize),
 	}
 	dst := ray.Vector2{ float32(x + scr.offsetx), float32(y + scr.offsety) }
-	ray.DrawTextureRec(scr.tileset, src, dst, ray.White)
+	ray.DrawTextureRec(tex, src, dst, ray.White)
 }
 
 func (scr *Screen) rect(x, y, w, h int, color ray.Color) {
