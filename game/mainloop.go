@@ -21,12 +21,14 @@ var player = Mob{ x: 4*screen.tsize, y: 4*screen.tsize, tile: 14 }
 
 // start game
 func Start() {
+	fmt.Println("starting WizzardQuest2!")
 	screen.create()
 	defer screen.destroy()
 
 	// load assets
 	fmt.Println("loading assets...")
 	screen.tileset = ray.LoadTexture("assets/monotiles.png")
+	battle.monsters = ray.LoadTexture("assets/monsters.png")
 	screen.sound = ray.LoadSound("assets/target.ogg")
 	gmap.load("assets/world.tmx")
 	// gmap.showCollision = true

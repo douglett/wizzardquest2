@@ -2,7 +2,9 @@ package game
 import ray "github.com/gen2brain/raylib-go/raylib"
 
 type Battle struct {
-	hand int
+	monsters  ray.Texture2D
+	frame     int
+	hand      int
 }
 
 var dialogbox = GMapFrag{
@@ -26,6 +28,7 @@ var battlebox = GMapFrag{
 }
 
 func (bt *Battle) mainloop() {
+	bt.frame = 0
 	bt.hand = 0
 	for !ray.WindowShouldClose() {
 		switch {
@@ -35,6 +38,7 @@ func (bt *Battle) mainloop() {
 			case ray.IsKeyPressed(ray.KeyLeft):   if bt.hand > 1 { bt.hand -= 2 }
 		}
 		bt.paint()
+		bt.frame++
 	}
 }
 
@@ -47,7 +51,8 @@ func (bt *Battle) paint() {
 		screen.offsetx, screen.offsety = (screen.width-battlebox.width())/2, 20
 		battlebox.border(10)
 		battlebox.show()
-		screen.blitt(screen.tileset, 14, (battlebox.width()-screen.tsize)/2, (battlebox.height()-screen.tsize)/2)
+		sprindex := (bt.frame / 30) % 3
+		screen.blitt(bt.monsters, sprindex, (battlebox.width()-screen.tsize)/2, (battlebox.height()-screen.tsize)/2)
 
 		// dialog box
 		screen.offsetx, screen.offsety = (screen.width-dialogbox.width())/2, 120
