@@ -81,19 +81,42 @@ func battle() {
 			7,  10, 10, 10, 6,
 		},
 	}
+	pos := 0
 	for !ray.WindowShouldClose() {
+		switch {
+			case ray.IsKeyPressed(ray.KeyUp):     if pos == 1 || pos == 3 { pos-- }
+			case ray.IsKeyPressed(ray.KeyDown):   if pos == 0 || pos == 2 { pos++ }
+			case ray.IsKeyPressed(ray.KeyRight):  if pos < 2 { pos += 2 }
+			case ray.IsKeyPressed(ray.KeyLeft):   if pos > 1 { pos -= 2 }
+		}
+
 		screen.begin()
 			player.centeron()
 			gmap.paint()
 
+			// battle screen
 			screen.offsetx, screen.offsety = (screen.width-box.width())/2, 20
 			box.border(10)
 			box.show()
 			screen.blitt(screen.tileset, 14, (box.width()-screen.tsize)/2, (box.height()-screen.tsize)/2)
 
+			// dialog box
 			screen.offsetx, screen.offsety = (screen.width-dialog.width())/2, 120
 			dialog.border(2)
 			dialog.show()
+
+			ray.DrawText("fireball", 38, 124, 2, ray.White)
+			ray.DrawText("fireball", 38, 136, 2, ray.White)
+			ray.DrawText("fireball", 88, 124, 2, ray.White)
+			ray.DrawText("fireball", 88, 136, 2, ray.White)
+			var tx, ty int32
+			switch pos {
+				case 0:  tx, ty = 30, 124
+				case 1:  tx, ty = 30, 136
+				case 2:  tx, ty = 80, 124
+				case 3:  tx, ty = 80, 136
+			}
+			ray.DrawText("@", tx, ty, 10, ray.White)
 		screen.flip()
 	}
 }
