@@ -89,6 +89,8 @@ func battle() {
 			screen.offsetx, screen.offsety = (screen.width-box.width())/2, 20
 			box.border(10)
 			box.show()
+			screen.blitt(screen.tileset, 14, (box.width()-screen.tsize)/2, (box.height()-screen.tsize)/2)
+
 			screen.offsetx, screen.offsety = (screen.width-dialog.width())/2, 120
 			dialog.border(2)
 			dialog.show()
