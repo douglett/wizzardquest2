@@ -1,4 +1,5 @@
 package game
+import "fmt"
 import ray "github.com/gen2brain/raylib-go/raylib"
 
 // useful colors
@@ -22,9 +23,15 @@ var player = Mob{ x: 4*screen.tsize, y: 4*screen.tsize, tile: 14 }
 func Start() {
 	screen.create()
 	defer screen.destroy()
+
+	// load assets
+	fmt.Println("loading assets...")
+	screen.tileset = ray.LoadTexture("assets/monotiles.png")
+	screen.sound = ray.LoadSound("assets/target.ogg")
 	gmap.load("assets/world.tmx")
 	// gmap.showCollision = true
 
+	fmt.Println("game start!")
 	overhead.mainloop()
 }
 

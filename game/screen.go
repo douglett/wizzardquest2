@@ -27,9 +27,6 @@ func (scr *Screen) create() error {
 	ray.InitWindow(int32(scr.width * scr.zoom), int32(scr.height * scr.zoom), scr.winname)
 	ray.InitAudioDevice()
 	ray.SetTargetFPS(60)
-	// load assets
-	scr.tileset = ray.LoadTexture("assets/monotiles.png")
-	scr.sound = ray.LoadSound("assets/target.ogg")
 	// ok
 	fmt.Println("Screen initialized:", scr.width, scr.height)
 	return nil
