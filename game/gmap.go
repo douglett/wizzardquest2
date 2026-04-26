@@ -1,4 +1,4 @@
-package main
+package game
 import "fmt"
 import "encoding/xml"
 import "os"
