@@ -1,0 +1,70 @@
+package main
+import ray "github.com/gen2brain/raylib-go/raylib"
+
+type Battle struct {
+	hand int
+}
+
+var dialogbox = MapFrag{
+	w: 7,
+	h: 2,
+	idata: []int{
+		4,  8,  8,  8,  8,  8,  5,
+		7,  10, 10, 10, 10, 10, 6,
+	},
+}
+var battlebox = MapFrag{
+	w: 5,
+	h: 5,
+	idata: []int{
+		4,  8,  8,  8,  5,
+		11, 1,  1,  1,  9,
+		11, 1,  1,  1,  9,
+		11, 1,  1,  1,  9,
+		7,  10, 10, 10, 6,
+	},
+}
+
+func (bt *Battle) mainloop() {
+	bt.hand = 0
+	for !ray.WindowShouldClose() {
+		switch {
+			case ray.IsKeyPressed(ray.KeyUp):     if bt.hand == 1 || bt.hand == 3 { bt.hand-- }
+			case ray.IsKeyPressed(ray.KeyDown):   if bt.hand == 0 || bt.hand == 2 { bt.hand++ }
+			case ray.IsKeyPressed(ray.KeyRight):  if bt.hand < 2 { bt.hand += 2 }
+			case ray.IsKeyPressed(ray.KeyLeft):   if bt.hand > 1 { bt.hand -= 2 }
+		}
+		bt.paint()
+	}
+}
+
+func (bt *Battle) paint() {
+	screen.begin()
+		player.centeron()
+		gmap.paint()
+
+		// battle screen
+		screen.offsetx, screen.offsety = (screen.width-battlebox.width())/2, 20
+		battlebox.border(10)
+		battlebox.show()
+		screen.blitt(screen.tileset, 14, (battlebox.width()-screen.tsize)/2, (battlebox.height()-screen.tsize)/2)
+
+		// dialog box
+		screen.offsetx, screen.offsety = (screen.width-dialogbox.width())/2, 120
+		dialogbox.border(2)
+		dialogbox.show()
+
+		ray.DrawText("fireball", 38, 124, 2, ColorWhite)
+		ray.DrawText("fireball", 38, 136, 2, ColorWhite)
+		ray.DrawText("fireball", 88, 124, 2, ColorWhite)
+		ray.DrawText("fireball", 88, 136, 2, ColorWhite)
+		var tx, ty int32
+		switch bt.hand {
+			case 0:  tx, ty = 30, 124
+			case 1:  tx, ty = 30, 136
+			case 2:  tx, ty = 80, 124
+			case 3:  tx, ty = 80, 136
+		}
+		ray.DrawText("@", tx, ty, 10, ray.White)
+	screen.flip()
+}
