@@ -13,17 +13,26 @@ var screen = Screen{
 	bgcolor: ColorBlack,
 }
 var gmap = GMap{}
+var overhead = Overhead{}
 var battle = Battle{}
 var player = Mob{ x: 4*screen.tsize, y: 4*screen.tsize, tile: 14 }
 
 
 // start game
-func Mainloop() {
+func Start() {
 	screen.create()
 	defer screen.destroy()
 	gmap.load("assets/world.tmx")
 	// gmap.showCollision = true
 
+	overhead.mainloop()
+}
+
+
+// Overhead game scene
+type Overhead struct {}
+
+func (oh *Overhead) mainloop() {
 	for !ray.WindowShouldClose() {
 		if ray.IsKeyPressed(ray.KeySpace) {
 			ray.PlaySound(screen.sound)
@@ -31,19 +40,19 @@ func Mainloop() {
 
 		// player walk
 		switch {
-			case ray.IsKeyDown(ray.KeyUp):     walk( 0, -1)
-			case ray.IsKeyDown(ray.KeyRight):  walk( 1,  0)
-			case ray.IsKeyDown(ray.KeyDown):   walk( 0,  1)
-			case ray.IsKeyDown(ray.KeyLeft):   walk(-1,  0)
+			case ray.IsKeyDown(ray.KeyUp):     oh.walk( 0, -1)
+			case ray.IsKeyDown(ray.KeyRight):  oh.walk( 1,  0)
+			case ray.IsKeyDown(ray.KeyDown):   oh.walk( 0,  1)
+			case ray.IsKeyDown(ray.KeyLeft):   oh.walk(-1,  0)
 			case ray.IsKeyDown(ray.KeyEnter):  battle.mainloop()
 		}
 
 		// repaint screen
-		repaint()
+		oh.paint()
 	}
 }
 
-func repaint() {
+func (oh *Overhead) paint() {
 	screen.begin()
 		player.centeron()
 		gmap.paint()
@@ -51,7 +60,7 @@ func repaint() {
 	screen.flip()
 }
 
-func walk(dx, dy int) {
+func (oh *Overhead) walk(dx, dy int) {
 	tx, ty := player.pos()
 	if _, c := gmap.tile(tx + dx, ty + dy); c == true { return }
 	dist := 0
@@ -59,6 +68,6 @@ func walk(dx, dy int) {
 		player.x += dx
 		player.y += dy
 		dist++
-		if (dist < screen.tsize) { repaint() }
+		if (dist < screen.tsize) { oh.paint() }
 	}
 }
