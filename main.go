@@ -7,25 +7,6 @@ var screen Screen = Screen{
 	winname: "WizzardQuest2",
 }
 var gmap GMap = GMap{}
-
-type Mob struct {
-	x, y, tile  int
-}
-
-func (mob *Mob) pos() (int, int) {
-	return mob.x / screen.tsize, mob.y / screen.tsize
-}
-
-func (mob *Mob) paint() {
-	screen.blitt(screen.tileset, mob.tile, mob.x, mob.y)
-}
-
-// set screen center to player 
-func (mob *Mob) centeron() {
-	screen.offsetx = -(mob.x - (screen.width - screen.tsize) / 2)
-	screen.offsety = -(mob.y - (screen.height - screen.tsize) / 2)
-}
-
 var player Mob = Mob{ x: 4*screen.tsize, y: 4*screen.tsize, tile: 14 }
 
 func main() {
