@@ -2,17 +2,18 @@ package main
 import "fmt"
 import ray "github.com/gen2brain/raylib-go/raylib"
 
+// useful colors
+var ColorCollision = ray.Color{255, 0, 0, 100}
+var ColorBlack     = ray.Color{16, 8, 32, 255}
+
 // game state
-var screen Screen = Screen{
+var screen = Screen{
 	width: 160, height: 160, zoom: 4, tsize: 16,
 	winname: "WizzardQuest2",
 }
-var gmap GMap = GMap{}
-var player Mob = Mob{ x: 4*screen.tsize, y: 4*screen.tsize, tile: 14 }
+var gmap = GMap{}
+var player = Mob{ x: 4*screen.tsize, y: 4*screen.tsize, tile: 14 }
 
-// useful colors
-var ColorCollision ray.Color = ray.Color{255, 0, 0, 100}
-var ColorBlack ray.Color = ray.Color{16, 8, 32, 255}
 
 // start game
 func main() {
