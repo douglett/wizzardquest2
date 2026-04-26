@@ -57,16 +57,20 @@ func (oh *Overhead) mainloop() {
 		}
 
 		// repaint screen
-		oh.paint()
+		oh.paintall()
 	}
 }
 
-func (oh *Overhead) paint() {
+func (oh *Overhead) paintall() {
 	screen.begin()
-		player.centeron()
-		gmap.paint()
-		screen.blitt(screen.tileset, player.tile, player.x, player.y)
+	oh.paint()
 	screen.flip()
+}
+
+func (oh *Overhead) paint() {
+	player.centeron()
+	gmap.paint()
+	screen.blitt(screen.tileset, player.tile, player.x, player.y)
 }
 
 func (oh *Overhead) walk(dx, dy int) {
@@ -77,6 +81,6 @@ func (oh *Overhead) walk(dx, dy int) {
 		player.x += dx
 		player.y += dy
 		dist++
-		if (dist < screen.tsize) { oh.paint() }
+		if (dist < screen.tsize) { oh.paintall() }
 	}
 }

@@ -37,39 +37,42 @@ func (bt *Battle) mainloop() {
 			case ray.IsKeyPressed(ray.KeyRight):  if bt.hand < 2 { bt.hand += 2 }
 			case ray.IsKeyPressed(ray.KeyLeft):   if bt.hand > 1 { bt.hand -= 2 }
 		}
-		bt.paint()
+		bt.paintall()
 		bt.frame++
 	}
 }
 
-func (bt *Battle) paint() {
+func (bt *Battle) paintall() {
 	screen.begin()
-		player.centeron()
-		gmap.paint()
-
-		// battle screen
-		screen.offsetx, screen.offsety = (screen.width-battlebox.width())/2, 20
-		battlebox.border(10)
-		battlebox.show()
-		sprindex := (bt.frame / 30) % 3
-		screen.blitt(bt.monsters, sprindex, (battlebox.width()-screen.tsize)/2, (battlebox.height()-screen.tsize)/2)
-
-		// dialog box
-		screen.offsetx, screen.offsety = (screen.width-dialogbox.width())/2, 120
-		dialogbox.border(2)
-		dialogbox.show()
-
-		ray.DrawText("fireball", 38, 124, 2, ColorWhite)
-		ray.DrawText("fireball", 38, 136, 2, ColorWhite)
-		ray.DrawText("fireball", 88, 124, 2, ColorWhite)
-		ray.DrawText("fireball", 88, 136, 2, ColorWhite)
-		var tx, ty int32
-		switch bt.hand {
-			case 0:  tx, ty = 30, 124
-			case 1:  tx, ty = 30, 136
-			case 2:  tx, ty = 80, 124
-			case 3:  tx, ty = 80, 136
-		}
-		ray.DrawText("@", tx, ty, 10, ray.White)
+	bt.paint()
 	screen.flip()
+}
+
+func (bt *Battle) paint() {
+	overhead.paint()
+
+	// battle screen
+	screen.offsetx, screen.offsety = (screen.width-battlebox.width())/2, 20
+	battlebox.border(10)
+	battlebox.show()
+	sprindex := (bt.frame / 30) % 3
+	screen.blitt(bt.monsters, sprindex, (battlebox.width()-screen.tsize)/2, (battlebox.height()-screen.tsize)/2)
+
+	// dialog box
+	screen.offsetx, screen.offsety = (screen.width-dialogbox.width())/2, 120
+	dialogbox.border(2)
+	dialogbox.show()
+
+	ray.DrawText("fireball", 38, 124, 2, ColorWhite)
+	ray.DrawText("fireball", 38, 136, 2, ColorWhite)
+	ray.DrawText("fireball", 88, 124, 2, ColorWhite)
+	ray.DrawText("fireball", 88, 136, 2, ColorWhite)
+	var tx, ty int32
+	switch bt.hand {
+		case 0:  tx, ty = 30, 124
+		case 1:  tx, ty = 30, 136
+		case 2:  tx, ty = 80, 124
+		case 3:  tx, ty = 80, 136
+	}
+	ray.DrawText("@", tx, ty, 10, ray.White)
 }
