@@ -10,6 +10,7 @@ var ColorWhite     = ray.Color{255, 255, 255, 255}
 var screen = Screen{
 	width: 160, height: 160, zoom: 4, tsize: 16,
 	winname: "WizzardQuest2",
+	bgcolor: ColorBlack,
 }
 var gmap = GMap{}
 var battle = Battle{}
@@ -21,7 +22,7 @@ func Mainloop() {
 	screen.create()
 	defer screen.destroy()
 	gmap.load("assets/world.tmx")
-	gmap.showCollision = true
+	// gmap.showCollision = true
 
 	for !ray.WindowShouldClose() {
 		if ray.IsKeyPressed(ray.KeySpace) {

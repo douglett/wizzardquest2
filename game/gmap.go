@@ -82,19 +82,19 @@ func (gm *GMap) tile(x, y int) (int, bool) {
 
 // === Map Fragments ===
 
-type MapFrag struct {
+type GMapFrag struct {
 	w, h  int
 	idata  []int
 }
 
-func (mf *MapFrag) width()  int { return mf.w * screen.tsize }
-func (mf *MapFrag) height() int { return mf.h * screen.tsize }
+func (mf *GMapFrag) width()  int { return mf.w * screen.tsize }
+func (mf *GMapFrag) height() int { return mf.h * screen.tsize }
 
-func (mf *MapFrag) border(pad int) {
+func (mf *GMapFrag) border(pad int) {
 	screen.rect(-pad, -pad, mf.width()+pad*2, mf.height()+pad*2, ColorBlack)
 }
 
-func (mf *MapFrag) show() {
+func (mf *GMapFrag) show() {
 	for y := range mf.h {
 		for x := range mf.w {
 			screen.blitt(screen.tileset, mf.idata[y * mf.w + x]-1, x*screen.tsize, y*screen.tsize)

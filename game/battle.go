@@ -5,7 +5,7 @@ type Battle struct {
 	hand int
 }
 
-var dialogbox = MapFrag{
+var dialogbox = GMapFrag{
 	w: 7,
 	h: 2,
 	idata: []int{
@@ -13,7 +13,7 @@ var dialogbox = MapFrag{
 		7,  10, 10, 10, 10, 10, 6,
 	},
 }
-var battlebox = MapFrag{
+var battlebox = GMapFrag{
 	w: 5,
 	h: 5,
 	idata: []int{

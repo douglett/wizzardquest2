@@ -6,6 +6,7 @@ import "math"
 type Screen struct {
 	width, height, zoom, tsize int
 	winname     string
+	bgcolor     ray.Color
 	camera      ray.Camera2D
 	tileset     ray.Texture2D
 	sound       ray.Sound
@@ -18,6 +19,7 @@ func (scr *Screen) create() error {
 	if scr.height <= 0 { scr.height = 480 }
 	if scr.zoom <= 0   { scr.zoom = 1 }
 	if scr.tsize <= 0  { scr.tsize = 16 }
+	if scr.bgcolor.A == 0  { scr.bgcolor = ray.RayWhite }
 	scr.camera.Zoom = float32(scr.zoom)
 	// init raylib
 	// ray.SetTraceLogLevel(ray.LogInfo)
@@ -42,7 +44,7 @@ func (scr *Screen) destroy() {
 func (scr *Screen) begin() {
 	ray.BeginDrawing()
 	ray.BeginMode2D(scr.camera)
-	ray.ClearBackground(ray.RayWhite)
+	ray.ClearBackground(scr.bgcolor)
 }
 
 func (scr *Screen) flip() {
