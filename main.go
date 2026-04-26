@@ -2,6 +2,7 @@ package main
 import "fmt"
 import ray "github.com/gen2brain/raylib-go/raylib"
 
+// game state
 var screen Screen = Screen{
 	width: 160, height: 160, zoom: 4, tsize: 16,
 	winname: "WizzardQuest2",
@@ -9,6 +10,10 @@ var screen Screen = Screen{
 var gmap GMap = GMap{}
 var player Mob = Mob{ x: 4*screen.tsize, y: 4*screen.tsize, tile: 14 }
 
+// useful colors
+var ColorCollision ray.Color = ray.Color{255, 0, 0, 100}
+
+// start game
 func main() {
 	fmt.Println("hello world")
 	screen.create()
@@ -27,6 +32,7 @@ func main() {
 			case ray.IsKeyDown(ray.KeyRight):  walk( 1,  0)
 			case ray.IsKeyDown(ray.KeyDown):   walk( 0,  1)
 			case ray.IsKeyDown(ray.KeyLeft):   walk(-1,  0)
+			case ray.IsKeyDown(ray.KeyEnter):  battle()
 		}
 
 		// repaint screen
@@ -36,8 +42,8 @@ func main() {
 
 func repaint() {
 	screen.begin()
-		gmap.paint()
 		player.centeron()
+		gmap.paint()
 		screen.blitt(screen.tileset, player.tile, player.x, player.y)
 	screen.flip()
 }
@@ -51,5 +57,16 @@ func walk(dx, dy int) {
 		player.y += dy
 		dist++
 		if (dist < screen.tsize) { repaint() }
+	}
+}
+
+func battle() {
+	for !ray.WindowShouldClose() {
+		screen.begin()
+			player.centeron()
+			gmap.paint()
+			screen.offsetx, screen.offsety = 0, 0
+			screen.rect(10, 10, 100, 100, ray.Black)
+		screen.flip()
 	}
 }

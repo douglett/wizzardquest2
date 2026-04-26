@@ -75,7 +75,7 @@ func (gm *GMap) paintat(posx, posy int) {
 			// show collision layer (optional)
 			c := coll.IData[y * gm.Width + x]
 			if gm.showCollision && c > 0 {
-				screen.rect((x * screen.tsize) + posx, (y * screen.tsize) + posy, screen.tsize, screen.tsize)
+				screen.rect((x * screen.tsize) + posx, (y * screen.tsize) + posy, screen.tsize, screen.tsize, ColorCollision)
 			}
 		}
 	}
