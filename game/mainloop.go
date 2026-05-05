@@ -29,6 +29,7 @@ func Start() {
 	fmt.Println("loading assets...")
 	screen.tileset = ray.LoadTexture("assets/monotiles.png")
 	battle.monsters = ray.LoadTexture("assets/monsters.png")
+	battle.spells = ray.LoadTexture("assets/spells.png")
 	screen.sound = ray.LoadSound("assets/target.ogg")
 	gmap.load("assets/world.tmx")
 	// gmap.showCollision = true

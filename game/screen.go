@@ -83,3 +83,7 @@ func (scr *Screen) blitt(tex ray.Texture2D, tile, x, y int) {
 func (scr *Screen) rect(x, y, w, h int, color ray.Color) {
 	ray.DrawRectangle(int32(x + scr.offsetx), int32(y + scr.offsety), int32(w), int32(h), color)
 }
+
+func (scr *Screen) text(s string, x, y int) {
+	ray.DrawText(s, int32(x + scr.offsetx), int32(y + scr.offsety), 10, ray.White)
+}
