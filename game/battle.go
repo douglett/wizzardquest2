@@ -34,7 +34,8 @@ var battlebox = GMapFrag{
 func (bt *Battle) mainloop() {
 	bt.frame = 0
 	bt.hand = 0
-	bt.actions = [4]string{"fireball", "run"}
+	bt.actions = [4]string{"fireball", "run", "test", "test"}
+	bt.paintall()
 	for !ray.WindowShouldClose() {
 		switch {
 			case ray.IsKeyPressed(ray.KeyUp):     if bt.hand == 1 || bt.hand == 3 { bt.hand-- }
@@ -45,6 +46,8 @@ func (bt *Battle) mainloop() {
 				switch bt.actions[bt.hand] {
 					case "":
 					case "fireball":  bt.cast()
+					// case "run":
+					default:  fmt.Printf("unknown selection '%s'\n", bt.actions[bt.hand])
 				}
 		}
 		bt.paintall()
@@ -102,16 +105,16 @@ func (bt *Battle) paint() {
 	dialogbox.border(2)
 	dialogbox.show()
 
-	ray.DrawText(bt.actions[0], 38, 124, 2, ColorWhite)
-	ray.DrawText(bt.actions[1], 38, 136, 2, ColorWhite)
-	ray.DrawText(bt.actions[2], 88, 124, 2, ColorWhite)
-	ray.DrawText(bt.actions[3], 88, 136, 2, ColorWhite)
-	var tx, ty int32
+	screen.text(bt.actions[0], 14, 4)
+	screen.text(bt.actions[1], 14, 16)
+	screen.text(bt.actions[2], 64, 4)
+	screen.text(bt.actions[3], 64, 16)
+	var tx, ty int
 	switch bt.hand {
-		case 0:  tx, ty = 30, 124
-		case 1:  tx, ty = 30, 136
-		case 2:  tx, ty = 80, 124
-		case 3:  tx, ty = 80, 136
+		case 0:  tx, ty = 4, 4
+		case 1:  tx, ty = 4, 16
+		case 2:  tx, ty = 54, 4
+		case 3:  tx, ty = 54, 16
 	}
-	ray.DrawText("@", tx, ty, 10, ray.White)
+	screen.text("@", tx, ty)
 }
