@@ -11,6 +11,7 @@ type Battle struct {
 	hand       int
 	actions    [4]string
 	offx, offy int
+	moffy      int
 }
 
 var dialogbox = GMapFrag{
@@ -59,7 +60,7 @@ func (bt *Battle) mainloop() {
 		bt.paint()
 		bt.painthand()
 		screen.flip()
-		bt.frame++
+		// bt.frame++
 	}
 }
 
@@ -93,8 +94,19 @@ func (bt *Battle) cast() {
 }
 
 func (bt *Battle) enemyattack() {
+	// jump monster
+	dist := 10
+	for i := 0; i < dist; i++ {
+		bt.moffy = -i
+		bt.paintall()
+	}
+	for i := dist; i >= 0; i-- {
+		bt.moffy = -i
+		bt.paintall()
+	}
+
 	// shake screen
-	dist := 2
+	dist = 2
 	for i := 0; i < 50; i++ {
 		if i % 3 == 0 {
 			bt.offx = (rand.Intn(2) - 1) * dist
@@ -120,6 +132,7 @@ func (bt *Battle) paintall() {
 }
 
 func (bt *Battle) paint() {
+	bt.frame++
 	overhead.paint()
 
 	// battle screen
@@ -128,8 +141,10 @@ func (bt *Battle) paint() {
 	screen.offsetx += bt.offx
 	screen.offsety += bt.offy
 	battlebox.show()
-	sprindex := (bt.frame / 30) % 3
-	screen.blitt(bt.monsters, sprindex, (battlebox.width()-screen.tsize)/2, (battlebox.height()-screen.tsize)/2)
+	monindex := (bt.frame / 30) % 3
+	monx := (battlebox.width() - screen.tsize) / 2
+	mony := (battlebox.height() - screen.tsize) / 2 + bt.moffy
+	screen.blitt(bt.monsters, monindex, monx, mony)
 
 	// dialog box
 	screen.offsetx, screen.offsety = (screen.width-dialogbox.width())/2, 120
