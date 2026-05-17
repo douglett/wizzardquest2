@@ -12,6 +12,9 @@ type Battle struct {
 	actions    [4]string
 	offx, offy int
 	moffy      int
+	// battle stats
+	player     BattleMob       
+	enemy      BattleMob       
 }
 
 var dialogbox = GMapFrag{
@@ -35,9 +38,16 @@ var battlebox = GMapFrag{
 }
 
 func (bt *Battle) mainloop() {
+	// reset
 	bt.frame = 0
 	bt.hand = 0
 	bt.actions = [4]string{"fireball", "run", "test", "test"}
+	// add mobs
+	bt.player = BMPlayer
+	bt.player.hp = bt.player.maxhp()
+	bt.enemy = BMSlime
+	bt.enemy.hp = bt.enemy.maxhp()
+	// mainloop
 	bt.paintall()
 	for !ray.WindowShouldClose() {
 		switch {
@@ -65,6 +75,8 @@ func (bt *Battle) mainloop() {
 }
 
 func (bt *Battle) cast() {
+	const DamageFireball = 8
+
 	// positioning variables
 	offx, offy := (screen.width-battlebox.width())/2, 20
 	midx := (battlebox.width() - screen.tsize) / 2
@@ -80,6 +92,11 @@ func (bt *Battle) cast() {
 		// flip
 		screen.flip()
 	}
+	
+	// calculate damage
+	damage := maxi(DamageFireball - bt.enemy.def, 1)
+	bt.enemy.hp = maxi(bt.enemy.hp - damage, 0)
+
 	fmt.Println("showing damage")
 	for i := 0; i < 50; i++ {
 		screen.begin()
@@ -87,7 +104,7 @@ func (bt *Battle) cast() {
 		// show damage
 		screen.offsetx, screen.offsety = offx, offy
 		j := int(math.Min(float64(i), 25))
-		screen.text("10", midx, midy-j)
+		screen.text(fmt.Sprintf("%d", damage), midx+5, midy-j)
 		// flip
 		screen.flip()
 	}
@@ -116,11 +133,15 @@ func (bt *Battle) enemyattack() {
 	}
 	bt.offx, bt.offy = 0, 0
 
+	// calculate damage
+	damage := maxi(bt.enemy.atk - bt.player.def, 1)
+	bt.player.hp = maxi(bt.player.hp - damage, 0)
+
 	// show damage
 	for i := 0; i < 100; i++ {
 		screen.begin()
 		bt.paint()
-		screen.text("You take 10\ndamage!", 7, 3)
+		screen.text(fmt.Sprintf("You take %d\ndamage!", damage), 7, 3)
 		screen.flip()
 	}
 }
@@ -150,6 +171,11 @@ func (bt *Battle) paint() {
 	screen.offsetx, screen.offsety = (screen.width-dialogbox.width())/2, 120
 	dialogbox.border(2)
 	dialogbox.show()
+
+	// player health
+	px, py := 2, -10
+	screen.rect(px-2, py-1, 60, 11, ColorBlack)
+	screen.text(fmt.Sprintf("%d/%d", bt.player.hp, bt.player.maxhp()), px, py)
 }
 
 func (bt *Battle) painthand() {
